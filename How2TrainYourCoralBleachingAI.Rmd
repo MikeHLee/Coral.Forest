@@ -1,0 +1,208 @@
+---
+title: "Coral Bleaching"
+output: html_notebook
+---
+
+Notes for the analysis:
+- Trying to predict when a coral reef will experience bleaching
+- Training a random forest for the predictive model
+- Specify a cost ratio and approximate it in the confusion table
+- data are features of the coral reef and its surroundings
+- A false negative is significantly more costly than a false positive
+
+```{r}
+#Dear Computer,
+
+install.packages("randomForest") #get randomForest
+library(randomForest)
+```
+
+```{r}
+#get the data
+rm(list=ls()) #clear the global environment
+load("~/Documents/Coding/Data/ReefCheck974.rdata") #load the data
+head(ReefCheck) #observe the rows & data types
+ncol(ReefCheck) 
+nrow(ReefCheck) 
+min(ReefCheck$Year);max(ReefCheck$Year)
+head(ReefCheck)
+```
+
+```{r}
+#clean the data
+
+#complete.cases(ReefCheck)
+#dataset is read by r as complete despite blank values
+#blanks will be assumed to be "none"
+
+#all of the variables will be considered as important
+#all of the varialbe types are appropriate, so we will keep them
+
+#given that blank is a legitimate level for a factor, we will recode these values to "none"
+
+any(ReefCheck$Bleaching == "")
+unique(ReefCheck$Bleaching) #fine
+
+any(ReefCheck$Ocean == "") #check for missing values, unable to fully clean unknowns
+unique(ReefCheck$Ocean) #examine factor values to determine a reasonable recoding for missing values
+ReefCheck$Ocean = as.character(ReefCheck$Ocean) #convert to character to replace values with strings
+ReefCheck$Ocean[(ReefCheck$Ocean == "")] = "unknown" #change to "unknown"
+# assumption is that blank values here correspond to the "unknown" factor level
+
+any(ReefCheck$Year == "")
+unique(ReefCheck$Year) #fine, leave as integer
+
+any(ReefCheck$Depth == "") #fine, leave as numerical
+
+any(ReefCheck$Storms == "") 
+unique(ReefCheck$Storms) 
+ReefCheck$Storms = as.character(ReefCheck$Storms) 
+ReefCheck$Storms[(ReefCheck$Storms == "")] = "unknown"
+ReefCheck$Storms[(ReefCheck$Storms == "y")] = "yes" #lets also convert the weird y to a yes
+
+any(ReefCheck$HumanImpact == "") 
+unique(ReefCheck$HumanImpact)
+ReefCheck$HumanImpact = as.character(ReefCheck$HumanImpact)
+ReefCheck$HumanImpact[(ReefCheck$HumanImpact == "")] = "unknown" 
+
+any(ReefCheck$Siltation == "")
+unique(ReefCheck$Siltation)
+ReefCheck$Siltation = as.character(ReefCheck$Siltation)
+ReefCheck$Siltation[(ReefCheck$Siltation == "")] = "never"
+ReefCheck$Siltation[(ReefCheck$Siltation == "Occasionally")] = "occasionally"
+
+any(ReefCheck$Dynamite == "")
+unique(ReefCheck$Dynamite)
+ReefCheck$Dynamite = as.character(ReefCheck$Dynamite)
+ReefCheck$Dynamite[(ReefCheck$Dynamite == "")] = "none" 
+
+any(ReefCheck$Poison == "") 
+unique(ReefCheck$Poison)
+ReefCheck$Poison = as.character(ReefCheck$Poison)
+ReefCheck$Poison[(ReefCheck$Poison == "")] = "unknown" 
+
+any(ReefCheck$Sewage == "")
+unique(ReefCheck$Sewage)
+ReefCheck$Sewage = as.character(ReefCheck$Sewage)
+ReefCheck$Sewage[(ReefCheck$Sewage == "")] = "none" 
+
+any(ReefCheck$Industrial == "")
+unique(ReefCheck$Industrial)
+ReefCheck$Industrial = as.character(ReefCheck$Industrial)
+ReefCheck$Industrial[(ReefCheck$Industrial == "")] = "none" 
+
+any(ReefCheck$Commercial == "")
+unique(ReefCheck$Commercial)
+ReefCheck$Commercial = as.character(ReefCheck$Commercial)
+ReefCheck$Commercial[(ReefCheck$Commercial == "")] = "none" 
+
+#now let's remove all of the unknowns
+
+unknown.indices = c()
+for(i in 1:nrow(ReefCheck)){
+  if(any(ReefCheck[i,] == "unknown")){
+    unknown.indices = append(unknown.indices, i)
+  }
+}
+length(unknown.indices)
+ReefCheck = ReefCheck[-unknown.indices,]
+
+#convert back to factors
+ReefCheck$Ocean = as.factor(ReefCheck$Ocean) 
+ReefCheck$Storms = as.factor(ReefCheck$Storms)
+ReefCheck$HumanImpact = as.factor(ReefCheck$HumanImpact)
+ReefCheck$Siltation = as.factor(ReefCheck$Siltation) 
+ReefCheck$Sewage = as.factor(ReefCheck$Sewage) 
+ReefCheck$Dynamite = as.factor(ReefCheck$Dynamite) 
+ReefCheck$Poison = as.factor(ReefCheck$Poison)
+ReefCheck$Industrial = as.factor(ReefCheck$Industrial) 
+ReefCheck$Commercial = as.factor(ReefCheck$Commercial)
+
+which(ReefCheck$Sewage == "k") #these are weird so I'm just going to remove them
+ReefCheck = ReefCheck[-which(ReefCheck$Sewage == "k"),]
+
+which(ReefCheck$Dynamite == "prior")
+ReefCheck = ReefCheck[-which(ReefCheck$Dynamite == "prior"),]
+
+length(which(ReefCheck$Bleaching == "No")) #should we remove the unknowns?
+length(which(ReefCheck$Bleaching == "Yes")) 
+
+#the resulting proportion of negative to positive response cases is quite acceptable, so we can remove the unknowns
+
+any(ReefCheck == "unknown")#check
+any(ReefCheck == "k")
+any(ReefCheck == "prior")
+
+#data clean, ready to go!
+
+```
+
+```{r}
+#Univariate statistics of interest
+
+plot(ReefCheck$Bleaching, main = "Bleaching")
+plot(ReefCheck$Ocean, main = "Ocean")
+plot(ReefCheck$Year, main = "Year")
+plot(ReefCheck$Depth, main = "Depth")
+plot(ReefCheck$Storms, main = "Storms")
+plot(ReefCheck$HumanImpact, main = "Human Impact")
+plot(ReefCheck$Siltation, main = "Siltation")
+plot(ReefCheck$Dynamite, main = "Dynamite")
+plot(ReefCheck$Poison, main = "Poison")
+plot(ReefCheck$Sewage, main = "Sewage")
+plot(ReefCheck$Industrial, main = "Industrial" )
+plot(ReefCheck$Commercial, main = "Commercial")
+```
+
+```{r}
+#bivariate statistics of interest
+plot(ReefCheck$Ocean, ReefCheck$Bleaching, main = "Bleaching/Ocean")
+plot(ReefCheck$Year, ReefCheck$Bleaching, main = "Bleaching/Year")
+plot(ReefCheck$Depth, ReefCheck$Bleaching, main = "Bleaching/Depth")
+plot(ReefCheck$Storms, ReefCheck$Bleaching, main = "Bleaching/Storms")
+plot(ReefCheck$HumanImpact, ReefCheck$Bleaching, main = "Bleaching/Human Impact")
+plot(ReefCheck$Siltation, ReefCheck$Bleaching, main = "Bleaching/Siltation")
+plot(ReefCheck$Dynamite, ReefCheck$Bleaching, main = "Bleaching/Dynamite")
+plot(ReefCheck$Poison, ReefCheck$Bleaching, main = "Bleaching/Poison")
+plot(ReefCheck$Sewage, ReefCheck$Bleaching, main = "Bleaching/Sewage")
+plot(ReefCheck$Industrial, ReefCheck$Bleaching, main = "Bleaching/Industrial" )
+plot(ReefCheck$Commercial, ReefCheck$Bleaching ,main = "Bleaching/Commercial")
+```
+
+```{r}
+#now let's fit the random forest
+
+#Set ntree sufficiently high to 500, but not higher to save computing time
+#set nodesize to sqrt(#predictors)
+#tune mtry by looping through possible values (#predictors possible to sample at each split)
+#empirically tune sampsize
+#set importance = T
+
+
+fit <- randomForest(Bleaching ~., data = ReefCheck, ntree = 500, mtry = 5, nodesize = sqrt(ncol(ReefCheck)), sampsize = c(300,100), importance = T)
+
+fit
+nrow(ReefCheck)#write a function in R to compute sensitivity and specificity
+
+varImpPlot(fit)
+
+partialPlot(fit, pred.data = ReefCheck, x.var = Ocean, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Year, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Depth, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Storms, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = HumanImpact, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Siltation, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Dynamite, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Poison, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Sewage, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Industrial, which.class = "Yes",rug = F)
+partialPlot(fit, pred.data = ReefCheck, x.var = Commercial, which.class = "Yes",rug = F)
+
+margins = margin(fit)
+hist(margins)
+plot(margins,sort=T)
+
+#MHL
+
+```
+
