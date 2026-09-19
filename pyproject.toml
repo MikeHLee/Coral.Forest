@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coralforest"
+version = "1.0.0"
+description = "A reproducible rebuild of a 2018 random-forest model of coral bleaching on Reef Check survey data, with stricter evaluation."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0" }
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "pyreadr>=0.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+coralforest-evaluate = "coralforest.evaluate:main"
+
+[tool.setuptools.packages.find]
+include = ["coralforest*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,11 @@
+{
+  "model": "A (2018 random forest, R randomForest 4.7.1.2)",
+  "rows_raw": 12392, "rows_clean": 9111, "positives": 255,
+  "seed": 2018, "oob_error": 0.0925255, "sensitivity": 0.929412, "specificity": 0.906843,
+  "confusion": {"tn": 8031, "fp": 825, "fn": 18, "tp": 237},
+  "repeats": 20,
+  "oob_error_over_seeds": {"mean": 0.0909450, "min": 0.0892328, "max": 0.0925255},
+  "sensitivity_over_seeds": {"mean": 0.930980, "min": 0.921569, "max": 0.941176},
+  "specificity_over_seeds": {"mean": 0.908424, "min": 0.906730, "max": 0.910230},
+  "importance_mean_decrease_accuracy": {"Year": 0.00706722, "Ocean": 0.00287761, "HumanImpact": 0.00196919, "Sewage": 0.00148898, "Storms": 0.00138754, "Industrial": 0.00102418, "Depth": 0.000851963, "Poison": 0.000606722, "Dynamite": 0.000530425, "Commercial": -0.00576451, "Siltation": -0.00844445}
+}
