@@ -6,3 +6,5 @@ __pycache__/
 .RData
 .DS_Store
 results/
+data/external/
+docs/atlas_data/

@@ -1,0 +1,227 @@
+VERIFICATION - teh2013_reef_fishers.csv
+==============================================================================
+
+Method of this check: the analyst converted the source Word file to plain text
+and to HTML with the macOS command textutil. The analyst parsed the HTML table
+cells, then read the plain-text lines back to confirm each value. Line numbers
+refer to raw/teh_S1.txt, made with this command:
+    textutil -convert txt -output raw/teh_S1.txt raw/teh2013_S1.doc
+
+In raw/teh_S1.txt each table cell is one line. Each country occupies 4 lines:
+  line 1  country name
+  line 2  region
+  line 3  number of reef fishers
+  line 4  year and source of the alternate estimate, or an empty line
+
+------------------------------------------------------------------------------
+CHECK 1 of 8 - row 1 of 98, first row
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 601 to 604):
+    line 601: American Samoa
+    line 602: Western Pacific
+    line 603:                      1,847
+    line 604: (empty line)
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = American Samoa
+    region                       = Western Pacific
+    num_reef_fishers             = 1847
+    alternate_source_estimate    = 0
+    alternate_estimate_year      = (empty)
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = American Samoa
+
+------------------------------------------------------------------------------
+CHECK 2 of 8 - row 6 of 98, a country marked with a star, which means an alternate source
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 621 to 624):
+    line 621: Bahamas*
+    line 622: Eastern Pacific/Atlantic
+    line 623:                   12,000
+    line 624: 2001;  ADDIN EN.CITE <EndNote><Cite><Author>CARICOM</Author><Year>2001</Year><RecNum>15</RecNum><MDL><REFERENC   ...[citation truncated in this quote]
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = Bahamas
+    region                       = Eastern Pacific/Atlantic
+    num_reef_fishers             = 12000
+    alternate_source_estimate    = 1
+    alternate_estimate_year      = 2001
+    alternate_estimate_source    = CARICOM 2001
+    source_name_verbatim         = Bahamas*
+
+------------------------------------------------------------------------------
+CHECK 3 of 8 - row 17 of 98, a country with the footnote marker 1
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 665 to 668):
+    line 665: China1
+    line 666: Southeast Asia
+    line 667:                 189,467
+    line 668: (empty line)
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = China
+    region                       = Southeast Asia
+    num_reef_fishers             = 189467
+    alternate_source_estimate    = 0
+    alternate_estimate_year      = (empty)
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = China 1
+
+------------------------------------------------------------------------------
+CHECK 4 of 8 - row 52 of 98, the source prints the value twice
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 805 to 808):
+    line 805: Marshall Islands
+    line 806: Western Pacific
+    line 807: 21,743
+    line 808:       21,743
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = Marshall Islands
+    region                       = Western Pacific
+    num_reef_fishers             = 21743
+    alternate_source_estimate    = 0
+    alternate_estimate_year      = (empty)
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = Marshall Islands
+
+------------------------------------------------------------------------------
+CHECK 5 of 8 - row 69 of 98, the largest value in the table
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 874 to 877):
+    line 874: Philippines
+    line 875: Southeast Asia
+    line 876:                  911,754
+    line 877: (empty line)
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = Philippines
+    region                       = Southeast Asia
+    num_reef_fishers             = 911754
+    alternate_source_estimate    = 0
+    alternate_estimate_year      = (empty)
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = Philippines
+
+------------------------------------------------------------------------------
+CHECK 6 of 8 - row 86 of 98
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 942 to 945):
+    line 942: Timor-Leste*
+    line 943: Southeast Asia
+    line 944:                      5,415
+    line 945: 2005; [8]
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = Timor-Leste
+    region                       = Southeast Asia
+    num_reef_fishers             = 5415
+    alternate_source_estimate    = 1
+    alternate_estimate_year      = 2005
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = Timor-Leste*
+
+------------------------------------------------------------------------------
+CHECK 7 of 8 - row 97 of 98, the source prints the value twice
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 986 to 989):
+    line 986: Wallis and Futuna
+    line 987: Western Pacific
+    line 988: 10,357                      10,357
+    line 989: (empty line)
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = Wallis and Futuna
+    region                       = Western Pacific
+    num_reef_fishers             = 10357
+    alternate_source_estimate    = 0
+    alternate_estimate_year      = (empty)
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = Wallis and Futuna
+
+------------------------------------------------------------------------------
+CHECK 8 of 8 - row 98 of 98, last row
+
+RAW SOURCE TEXT (raw/teh_S1.txt lines 990 to 993):
+    line 990: Yemen
+    line 991: Middle East/NE Africa
+    line 992: 20,993
+    line 993: (empty line)
+
+PARSED CELLS IN THE CSV FILE:
+    country                      = Yemen
+    region                       = Middle East/NE Africa
+    num_reef_fishers             = 20993
+    alternate_source_estimate    = 0
+    alternate_estimate_year      = (empty)
+    alternate_estimate_source    = (empty)
+    source_name_verbatim         = Yemen
+
+==============================================================================
+CHECK OF THE COLUMN SUM AGAINST THE TOTAL THAT THE TABLE PRINTS
+==============================================================================
+
+TEST 1. Sum of num_reef_fishers against the printed Total row.
+  Sum of the 98 values in the CSV file = 6122041 reef fishers
+  The source prints a Total row at raw/teh_S1.txt lines 994 to 996:
+      line 994: Total
+      line 996:            6,145,200
+  Difference: 6145200 minus 6122041 = 23159 reef fishers.
+  Result: NOT consistent. The CSV sum is short by 23159 reef fishers, which is
+  0.38% of the printed total.
+
+DIAGNOSIS OF THE DIFFERENCE
+
+  Step 1. The paper states that the final calculation covers 99 countries.
+  Article text, verbatim: 'The final number of coral reef fishers in 99
+  countries (excluding Singapore) was then calculated as the average of
+  approach 1 ... and 2'. Source: the PLOS article XML at
+  https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0065397&type=manuscript
+
+  Step 2. The published Table S3 holds only 98 country rows. The analyst
+  counted the rows in two independent ways and got 98 both times:
+    - textutil -convert txt, then a parse anchored on the 5 region names: 98
+    - textutil -convert html, then a parse of the HTML <tr> elements: 98
+  Both parses list every non-empty line in the table. No line is unused. So no
+  row was lost in the conversion. The row is absent from the published file.
+
+  Step 3. The analyst located the region of the missing row. Table 4 of the
+  article gives the regional totals in millions. The CSV regional sums are:
+      Eastern Pacific/Atlantic   35 countries     480545 fishers  = 0.48 million
+      Indian Ocean               14 countries    1502590 fishers  = 1.50 million
+      Middle East/NE Africa      14 countries     344549 fishers  = 0.34 million
+      Southeast Asia             12 countries    3348588 fishers  = 3.35 million
+      Western Pacific            23 countries     445769 fishers  = 0.45 million
+    Article Table 4 prints:
+      Southeast Asia             3.35 million   -> CSV gives 3.35  MATCH
+      Indian Ocean               1.50 million   -> CSV gives 1.50  MATCH
+      E. Pacific/Atlantic        0.50 million   -> CSV gives 0.48  MISMATCH
+      Western Pacific            0.45 million   -> CSV gives 0.45  MATCH
+      Middle East                0.34 million   -> CSV gives 0.34  MATCH
+      TOTAL                      6.14 million
+    Adding the missing 23,159 fishers to the Eastern Pacific/Atlantic sum gives
+    480,545 + 23,159 = 503,704, which rounds to 0.50 million and matches Table 4.
+
+  Step 4. Conclusion. One country in the Eastern Pacific/Atlantic region, with
+  23,159 reef fishers, is missing from the published Table S3. The analyst
+  could NOT identify which country it is. The analyst compared the Table S3
+  country list with Table 2 of the article (97 countries) and with Table S2 of
+  the supplement. Every country in those lists is already present in Table S3.
+  The analyst did NOT add a row for the missing country and did NOT alter any
+  value. The CSV file holds exactly the 98 rows that the source prints.
+
+==============================================================================
+MISSING COLUMNS
+==============================================================================
+
+Table S3 holds NO population column and NO reef-area column. The four printed
+columns are: Country, Region, No. of reef fishers, and Year and source of
+alternate estimate. The task asked for a population or reef-area column. The
+analyst did not add one, because the source table has none.
+
+Related data that the paper puts in OTHER tables, not in Table S3:
+  - Article Table 2 gives a rural coastal population LEVEL per country as the
+    words Low, Medium or High. Article Table 2 gives no population count.
+  - Article Table 3 gives a fisher density in fishers per square kilometre of
+    fishing ground, by population level and fishing pressure level. Article
+    Table 3 gives no per-country reef area.

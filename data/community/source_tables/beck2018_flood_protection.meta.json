@@ -1,0 +1,124 @@
+{
+  "dataset_name": "beck2018_flood_protection",
+  "extracted_on": "2026-09-19",
+  "csv_file": "beck2018_flood_protection.csv",
+  "row_count": 53,
+  "row_unit": "one row per country or territory",
+
+  "citation": "Beck, M.W., Losada, I.J., Menendez, P., Reguero, B.G., Diaz-Simal, P. & Fernandez, F. (2018). The global flood protection savings provided by coral reefs. Nature Communications 9, 2186.",
+  "doi": "10.1038/s41467-018-04568-z",
+
+  "source_urls": [
+    {
+      "url": "https://www.nature.com/articles/s41467-018-04568-z.pdf",
+      "holds": "Table 1 of the main article",
+      "local_file": "raw/beck2018_main.pdf",
+      "bytes": 4823165,
+      "sha256": "ef99fe5128228b26c95e71c32011c4fad18075f1eed0f65a2bb21beefc9cf9e4",
+      "http_status": 200
+    },
+    {
+      "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-018-04568-z/MediaObjects/41467_2018_4568_MOESM1_ESM.pdf",
+      "holds": "Supplementary Table 1 on page 13 and Supplementary Table 2 on page 14",
+      "local_file": "raw/beck2018_SI.pdf",
+      "bytes": 846302,
+      "sha256": "6d9b413a29f6bcb4a7ee46e439c8ef70f12d9eced554882aba4fd7dcce9f7d33",
+      "http_status": 200
+    },
+    {
+      "url": "https://www.nature.com/articles/s41467-018-04568-z/tables/1",
+      "holds": "the publisher HTML version of Table 1, used as a second reading of Table 1",
+      "local_file": "raw/beck_table1.html",
+      "http_status": 200
+    }
+  ],
+
+  "license": "CC BY 4.0 (Creative Commons Attribution 4.0 International)",
+  "license_stated_where": [
+    "The article PDF file states, verbatim: 'Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons license, and indicate if changes were made.' Location: raw/beck_main_layout.txt, lines 605 to 610.",
+    "The Crossref record for DOI 10.1038/s41467-018-04568-z lists the version-of-record license as https://creativecommons.org/licenses/by/4.0 with a start date of 2018-06-12."
+  ],
+  "license_note": "The Creative Commons statement in the article excludes third-party material. The numbers in these three tables are the authors' own results, so the CC BY 4.0 license covers them.",
+
+  "tables_extracted": [
+    {
+      "table": "Table 1 (main article, page 4)",
+      "caption_verbatim": "Table 1 Countries that receive the most flood protection benefits from reefs",
+      "footnote_verbatim": "Annual expected benefit of reefs for flood protection in terms of annual averted damages to built capital ($ millions per year) and relative to Gross Domestic Product (GDP). The values are the difference in expected damages to built capital with and without reefs",
+      "column_headers_verbatim": ["Annual averted damages ($ millions)", "Annual averted damages/GDP"],
+      "rows": "top 15 in each of the two rankings"
+    },
+    {
+      "table": "Supplementary Table 1 (supplementary information PDF, page 13)",
+      "caption_verbatim": "Supplementary Table 1. The difference in built capital flooded with and without reefs for 100-year events. The values are the averted flooding of built capital in absolute terms ($US billions) and relative to total national built capital for each country.",
+      "column_headers_verbatim": ["Built capital flooded (100-yr)", "% of the national built capital"],
+      "rows": "top 15 in each of the two rankings"
+    },
+    {
+      "table": "Supplementary Table 2 (supplementary information PDF, page 14)",
+      "caption_verbatim": "Supplementary Table 2 | Ranking of countries that receive the most flood protection benefits from reefs in terms of avoided flooding of land and people annually. The table ranks countries by the absolute and percent differences in land area and people that would be flooded with and without reefs. See Table 1 for differences in built capital flooded.",
+      "column_headers_verbatim": ["ANNUAL EXPECTED AREA FLOODED (km2)", "Absolute", "% of the total in country", "ANNUAL EXPECTED PEOPLE FLOODED", "Absolute", "% of the total in country"],
+      "rows": "top 30 in each of the four rankings"
+    }
+  ],
+
+  "dollar_year": "2011 US dollars",
+  "dollar_year_evidence": "The Methods section states, verbatim: 'We expanded on earlier approaches to infer built capital from population data by identifying the ratio between built capital per capita and the gross domestic product (GDP) per capita for each country in 2011 US$ using information from the World Bank'. Location: raw/beck_main_layout.txt, lines 422 to 425.",
+  "population_data": "LandScan 2011. Reference 60 of the article: Bright, E.A., Coleman, P.R., Rose, A.N. & Urban, M.L. LandScan 2011 web.ornl.gov/sci/landscan/index.shtml (2012).",
+
+  "columns": [
+    {"name": "country", "unit": "text", "description": "Country or territory name, normalised to one spelling across the three tables."},
+    {"name": "rank_annual_averted_damages", "unit": "integer rank 1 to 15", "description": "Rank in Table 1, left ranking."},
+    {"name": "annual_averted_damages_musd", "unit": "millions of 2011 US dollars per year", "description": "Table 1, left ranking. The difference in annual expected damages to built capital with reefs and without reefs."},
+    {"name": "rank_annual_averted_damages_over_gdp", "unit": "integer rank 1 to 15", "description": "Rank in Table 1, right ranking."},
+    {"name": "annual_averted_damages_over_gdp", "unit": "NOT STATED IN THE SOURCE. The column header is 'Annual averted damages/GDP' with no unit and no percent sign. The magnitude of the values fits percent. See the verification file, section 'VALUES THAT THE ANALYST COULD NOT VERIFY', item 1.", "description": "Table 1, right ranking. Annual averted damages divided by gross domestic product."},
+    {"name": "rank_averted_built_capital_100yr", "unit": "integer rank 1 to 15", "description": "Rank in Supplementary Table 1, left ranking."},
+    {"name": "averted_built_capital_100yr_busd", "unit": "billions of 2011 US dollars, for one 100-year storm event", "description": "Supplementary Table 1, left ranking. The difference in built capital flooded with reefs and without reefs for the 100-year event. This is exposed asset value, not damaged value."},
+    {"name": "rank_averted_built_capital_100yr_pct", "unit": "integer rank 1 to 15", "description": "Rank in Supplementary Table 1, right ranking."},
+    {"name": "averted_built_capital_100yr_pct_national", "unit": "percent of total national built capital", "description": "Supplementary Table 1, right ranking."},
+    {"name": "rank_avoided_area_flooded", "unit": "integer rank 1 to 30", "description": "Rank in Supplementary Table 2, column 1."},
+    {"name": "annual_avoided_area_flooded_km2", "unit": "square kilometres per year", "description": "Supplementary Table 2, column 1. The annual expected land area that reefs keep from flooding."},
+    {"name": "rank_avoided_area_flooded_pct", "unit": "integer rank 1 to 30", "description": "Rank in Supplementary Table 2, column 2."},
+    {"name": "annual_avoided_area_flooded_pct_country", "unit": "percent of the total land area of the country", "description": "Supplementary Table 2, column 2."},
+    {"name": "rank_avoided_people_flooded", "unit": "integer rank 1 to 30", "description": "Rank in Supplementary Table 2, column 3."},
+    {"name": "annual_avoided_people_flooded", "unit": "people per year", "description": "Supplementary Table 2, column 3. The annual expected number of people that reefs keep from flooding."},
+    {"name": "rank_avoided_people_flooded_pct", "unit": "integer rank 1 to 30", "description": "Rank in Supplementary Table 2, column 4."},
+    {"name": "annual_avoided_people_flooded_pct_country", "unit": "percent of the total population of the country", "description": "Supplementary Table 2, column 4."},
+    {"name": "source_name_variants", "unit": "text, pipe separated", "description": "Every country spelling that the source tables print for this row. Example: 'Dom. Republic|Dom.Republic'."}
+  ],
+
+  "empty_cells": "A cell is empty when the country does not appear in that ranking. Each ranking holds only the top 15 or the top 30 countries. The source publishes no full per-country table.",
+
+  "extraction_method": {
+    "steps": [
+      "1. Download the article PDF file and the supplementary information PDF file with curl.",
+      "2. Run 'pdftotext -layout' on both PDF files. Also run plain 'pdftotext' on the supplementary file as a second reading of Supplementary Table 2, because that table interleaves four rankings across the page.",
+      "3. Fetch the publisher HTML version of Table 1 as a second reading of Table 1. The HTML and the PDF agree cell for cell.",
+      "4. Transcribe each of the eight rankings by hand into the Python script build_beck.py, reading from the layout text. Each ranking holds 15 or 30 rows.",
+      "5. Merge the eight rankings on a normalised country name with pandas. Write the CSV file."
+    ],
+    "tools": ["curl", "pdftotext 25.12.0 (poppler)", "Python 3.12 in the local venv", "pandas 3.0.6"],
+    "scripts": ["build_beck.py", "mk_beck_verify.py"],
+    "manual_transcription": true,
+    "manual_transcription_note": "The eight rankings were typed by hand from the layout text, then checked against the layout text a second time and against the publisher HTML table for Table 1."
+  },
+
+  "country_name_normalisation": {
+    "Dom. Republic": "Dominican Republic",
+    "Dom.Republic": "Dominican Republic",
+    "Turks & Caicos": "Turks and Caicos Islands",
+    "Turks and Caicos": "Turks and Caicos Islands",
+    "Antigua & Barbuda": "Antigua and Barbuda",
+    "Solomon Island": "Solomon Islands",
+    "U.S. VI": "United States Virgin Islands",
+    "U.S.V.I.": "United States Virgin Islands",
+    "N. Mariana Is.": "Northern Mariana Islands"
+  },
+
+  "known_gaps": [
+    "The paper publishes NO country table for the 10-year, 25-year or 50-year storm events. Supplementary Table 1 covers the 100-year event only. The article reports the 10, 25, 50 and 100 year results only as global figures in Figure 3 and Figure 4 and as global sentences in the text.",
+    "The paper publishes NO full per-country table. Only the top 15 or top 30 countries appear. The data availability statement says the data are 'mappable and downloadable at http://maps.oceanwealth.org/' and that the underlying data sets are 'available on request from IHCantabria'. The analyst did not test those two routes.",
+    "Supplementary Data 1 (file 41467_2018_4568_MOESM4_ESM.xlsx) holds a methods comparison table only, with no country data.",
+    "The unit of the column annual_averted_damages_over_gdp is not stated in the source."
+  ]
+}

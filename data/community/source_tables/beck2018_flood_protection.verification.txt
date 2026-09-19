@@ -1,0 +1,178 @@
+VERIFICATION - beck2018_flood_protection.csv
+==============================================================================
+
+Method of this check: the analyst read each quoted line from the plain-text
+extraction of the source PDF file. The analyst then compared each printed value
+with the value in the CSV file. Line numbers refer to the extraction files in
+the raw/ folder of this directory.
+
+Extraction files:
+  raw/beck_main_layout.txt  <- pdftotext -layout raw/beck2018_main.pdf
+  raw/beck_SI_layout.txt    <- pdftotext -layout raw/beck2018_SI.pdf
+
+------------------------------------------------------------------------------
+CHECK 1 of 8 - Table 1, rank 1 (first row of the main table)
+
+RAW SOURCE TEXT (raw/beck_main_layout.txt line 219):
+      1       Indonesia           639                      Cayman Islands       0.98
+
+PARSED VALUES IN THE CSV FILE:
+    country=Indonesia            rank_annual_averted_damages=1  annual_averted_damages_musd=639
+    country=Cayman Islands       rank_annual_averted_damages_over_gdp=1  annual_averted_damages_over_gdp=0.98
+
+------------------------------------------------------------------------------
+CHECK 2 of 8 - Table 1, rank 5 (middle of the main table)
+
+RAW SOURCE TEXT (raw/beck_main_layout.txt line 223):
+      5       Cuba                 401                     Bahamas              0.16
+
+PARSED VALUES IN THE CSV FILE:
+    country=Cuba                 rank_annual_averted_damages=5  annual_averted_damages_musd=401
+    country=Bahamas              rank_annual_averted_damages_over_gdp=5  annual_averted_damages_over_gdp=0.16
+
+------------------------------------------------------------------------------
+CHECK 3 of 8 - Table 1, rank 8 (middle of the main table)
+
+RAW SOURCE TEXT (raw/beck_main_layout.txt line 228):
+      8       United States         94                     Antigua & Barbuda    0.13
+
+PARSED VALUES IN THE CSV FILE:
+    country=United States        rank_annual_averted_damages=8  annual_averted_damages_musd=94
+    country=Antigua and Barbuda  rank_annual_averted_damages_over_gdp=8  annual_averted_damages_over_gdp=0.13
+    NOTE: the CSV file records the source spelling 'Antigua & Barbuda' in the
+          column source_name_variants.
+
+------------------------------------------------------------------------------
+CHECK 4 of 8 - Table 1, rank 15 (last row of the main table)
+
+RAW SOURCE TEXT (raw/beck_main_layout.txt line 235):
+      15      Belize                  9                    Solomon Islands      0.04
+
+PARSED VALUES IN THE CSV FILE:
+    country=Belize               rank_annual_averted_damages=15  annual_averted_damages_musd=9
+    country=Solomon Islands      rank_annual_averted_damages_over_gdp=15  annual_averted_damages_over_gdp=0.04
+
+------------------------------------------------------------------------------
+CHECK 5 of 8 - Supplementary Table 1, rank 1 (first row)
+
+RAW SOURCE TEXT (raw/beck_SI_layout.txt line 542):
+         1. Indonesia                   36.48                    1. Cayman Islands                6.81
+
+PARSED VALUES IN THE CSV FILE:
+    country=Indonesia            rank_averted_built_capital_100yr=1  averted_built_capital_100yr_busd=36.48
+    country=Cayman Islands       rank_averted_built_capital_100yr_pct=1  averted_built_capital_100yr_pct_national=6.81
+
+------------------------------------------------------------------------------
+CHECK 6 of 8 - Supplementary Table 1, rank 8 (middle)
+
+RAW SOURCE TEXT (raw/beck_SI_layout.txt line 550):
+         8. United States                6.55                    8. Dom. Republic                 2.19
+
+PARSED VALUES IN THE CSV FILE:
+    country=United States        rank_averted_built_capital_100yr=8  averted_built_capital_100yr_busd=6.55
+    country=Dominican Republic   rank_averted_built_capital_100yr_pct=8  averted_built_capital_100yr_pct_national=2.19
+    NOTE: the source spelling is 'Dom. Republic'.
+
+------------------------------------------------------------------------------
+CHECK 7 of 8 - Supplementary Table 2, rank 1 (first row, all four columns)
+
+RAW SOURCE TEXT (raw/beck_SI_layout.txt lines 571 to 573):
+     1   Philippines          88.45   Islands           0.968     Philippines          73162   Islands               0.2402
+         (the words 'Cayman' and 'Islands' are split over two lines in the PDF file;
+          line 571 holds 'Cayman' and line 573 holds 'Islands')
+
+PARSED VALUES IN THE CSV FILE:
+    country=Philippines          rank_avoided_area_flooded=1  annual_avoided_area_flooded_km2=88.45
+    country=Cayman Islands       rank_avoided_area_flooded_pct=1  annual_avoided_area_flooded_pct_country=0.968
+    country=Philippines          rank_avoided_people_flooded=1  annual_avoided_people_flooded=73162
+    country=Cayman Islands       rank_avoided_people_flooded_pct=1  annual_avoided_people_flooded_pct_country=0.2402
+
+------------------------------------------------------------------------------
+CHECK 8 of 8 - Supplementary Table 2, rank 30 (last row, all four columns)
+
+RAW SOURCE TEXT (raw/beck_SI_layout.txt line 617):
+    30   Solomon Island        0.50   Vietnam           0.003     Sri Lanka              50    Thailand              0.0030
+
+PARSED VALUES IN THE CSV FILE:
+    country=Solomon Islands      rank_avoided_area_flooded=30  annual_avoided_area_flooded_km2=0.5
+    country=Vietnam              rank_avoided_area_flooded_pct=30  annual_avoided_area_flooded_pct_country=0.003
+    country=Sri Lanka            rank_avoided_people_flooded=30  annual_avoided_people_flooded=50
+    country=Thailand             rank_avoided_people_flooded_pct=30  annual_avoided_people_flooded_pct_country=0.003
+    NOTE: the source spelling is 'Solomon Island' (singular) in this one cell.
+
+==============================================================================
+CHECK OF THE COLUMN SUMS AGAINST THE TOTALS THAT THE PAPER STATES
+==============================================================================
+
+The paper does not print a global total inside any of these three tables.
+The paper prints global totals in the running text. The tables hold only the
+top 15 or the top 30 countries. Therefore each column sum must be SMALLER than
+the global total. The analyst used this as the consistency test.
+
+TEST 1. Annual averted damages.
+  Sum of the 15 values in annual_averted_damages_musd = 3099 million US dollars
+  Paper text (raw/beck_main_layout.txt line 159): 'reefs reduce the annual
+  expected damages from storms by more than $4 billion'.
+  4000 million minus 3099 million = 901 million.
+  Result: consistent. The top 15 countries hold about 77% of the global total.
+
+TEST 2. Annual avoided people flooded.
+  Sum of the 30 values in annual_avoided_people_flooded = 197797 people per year
+  Paper text (raw/beck_main_layout.txt lines 201 to 202): 'Reefs also reduce
+  annual flooding by more than 200,000 people (Fig. 2)'.
+  200000 minus 197797 = 2203 people.
+  Result: consistent. The top 30 countries hold about 98.9% of the global total.
+
+TEST 2b. Cross-check of the people total by a second route.
+  Paper text (raw/beck_main_layout.txt lines 112 to 113): 'the flooding of land
+  would increase by 69% and ... affecting 81% more people annually (Fig. 2)'.
+  Let Y be the global annual people flooded with reefs. Then 1.81*Y - Y = the
+  avoided people, which the paper states is more than 200,000.
+  0.81*Y = 200000 gives Y = 246,914 and 1.81*Y = 446,914.
+  Both values fit the axis range of Figure 2 (0 to 700 thousand people).
+  Result: the two statements in the paper agree with each other, and the CSV
+  sum of 197797 people is 98.9% of the 200,000 global figure.
+
+TEST 3. Annual avoided area flooded.
+  Sum of the 30 values in annual_avoided_area_flooded_km2 = 451.79 square kilometres
+  Result: NOT verifiable against a printed number. The paper gives the global
+  land-area result only as a percentage change ('increase by 69%') and as a bar
+  chart (Figure 2). The paper prints no absolute global land-area value in the
+  text. The analyst therefore cannot compute a global total to compare with.
+  The analyst did confirm that the 30 values fall in rank order from 88.45 down
+  to 0.50 square kilometres, with no break in the order.
+
+TEST 4. Averted built capital for the 100-year event.
+  Sum of the 15 values in averted_built_capital_100yr_busd = 169.90 billion US dollars
+  Paper text (raw/beck_main_layout.txt lines 120 to 122): 'For 100-year events,
+  the topmost 1 m of reefs provide flood reduction benefits that result in $130
+  billion in avoided damages'.
+  Result: NOT consistent as a direct sum. The $130 billion figure is avoided
+  DAMAGE to built capital. Supplementary Table 1 reports avoided FLOODING of
+  built capital, which is the exposed asset value, not the damaged value. The
+  paper applies a damage function to convert exposure into damage. The exposure
+  sum (169.90 billion) is larger than the damage figure (130 billion), which is
+  the expected direction. The analyst could NOT verify this column against a
+  printed total.
+
+==============================================================================
+VALUES THAT THE ANALYST COULD NOT VERIFY
+==============================================================================
+
+1. The unit of the column annual_averted_damages_over_gdp.
+   The table header prints 'Annual averted damages/GDP' with no unit and no
+   percent sign. The analyst read the same header in the publisher HTML table at
+   https://www.nature.com/articles/s41467-018-04568-z/tables/1 . The header is
+   identical there. The magnitude of the values matches a percent, not a plain
+   ratio. Example: Cuba has 401 million US dollars of averted damage and a 2011
+   gross domestic product near 69 billion US dollars. 401/69000 = 0.58 percent.
+   The table prints 0.25. The order of magnitude fits percent. The analyst
+   reports the value as printed and does NOT assert the unit.
+
+2. There is no country table for the 10-year, 25-year and 50-year storm events.
+   Supplementary Table 1 covers the 100-year event only. The analyst searched
+   both PDF files for the strings 'return period', '10-year', '25-year',
+   '50-year' and '100-year'. Every other result for a storm return period is a
+   global figure (Figure 3 and Figure 4 of the main paper) or a methods
+   sentence. Supplementary Data 1 (file 41467_2018_4568_MOESM4_ESM.xlsx) holds a
+   methods comparison table only, with no country data.

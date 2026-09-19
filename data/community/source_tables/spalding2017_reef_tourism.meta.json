@@ -1,0 +1,113 @@
+{
+  "dataset_name": "spalding2017_reef_tourism",
+  "extracted_on": "2026-09-19",
+  "csv_file": "spalding2017_reef_tourism.csv",
+  "row_count": 80,
+  "row_unit": "one row per country or territory",
+
+  "citation": "Spalding, M., Burke, L., Wood, S.A., Ashpole, J., Hutchison, J. & zu Ermgassen, P. (2017). Mapping the global value and distribution of coral reef tourism. Marine Policy 82, 104-113.",
+  "doi": "10.1016/j.marpol.2017.05.014",
+
+  "source_urls": [
+    {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0308597X17300635-mmc1.pdf",
+      "holds": "Appendix A, Supplementary information. Table A1 is on pages 1 to 3.",
+      "local_file": "raw/spalding2017_mmc1.pdf",
+      "bytes": 587787,
+      "sha256": "b6672fce420e482108410dc9580c6876e25bc4c51a4a03c7ad81a9c4afe8cb84",
+      "http_status": 200,
+      "pages": 13
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0308597X17300635",
+      "holds": "the article itself",
+      "http_status": 403,
+      "note": "ScienceDirect refused the request. The analyst did NOT read the article text or the article PDF file. Only the supplementary PDF file was read."
+    },
+    {
+      "url": "https://api.openalex.org/works/doi:10.1016/j.marpol.2017.05.014",
+      "holds": "the article abstract and the license label, used to check the global total",
+      "http_status": 200
+    }
+  ],
+
+  "license": "CC BY 4.0 (Creative Commons Attribution 4.0 International)",
+  "license_stated_where": [
+    "The Crossref record for DOI 10.1016/j.marpol.2017.05.014 lists a version-of-record license of http://creativecommons.org/licenses/by/4.0/ with a start date of 2017-05-15. Read from https://api.crossref.org/works/10.1016/j.marpol.2017.05.014 on 2026-09-19.",
+    "The OpenAlex record for the same DOI reports open_access.is_oa = true, oa_status = hybrid, and primary_location.license = cc-by. Read from https://api.openalex.org/works/doi:10.1016/j.marpol.2017.05.014 on 2026-09-19."
+  ],
+  "license_note": "The analyst could NOT read the license statement on the publisher page, because ScienceDirect returned HTTP 403. The supplementary PDF file itself prints no license line. The two metadata records above are the evidence for CC BY 4.0.",
+
+  "table_extracted": {
+    "table": "Table A1, in section A1 'Summary data' of Appendix A",
+    "caption_verbatim": "Table A1: Summary table for all countries and territories with >50km-2 of reef and total reef-related expenditure >$10 million per year (N=80).",
+    "column_headers_verbatim": [
+      "Country or territory",
+      "International and domestic tourist arrivals",
+      "Sum of reef-associated tourist arrivals (trip equivalents)",
+      "All visitor spending (international and domestic) ($1000)",
+      "Sum of reef-associated visitor expenditure ($1000)",
+      "Reef visitor expenditure as proportion of total tourism",
+      "Reef tourism as proportion of GDP",
+      "Mean value of reef (US$ km-2)"
+    ],
+    "header_note": "The eight headers print vertically in the PDF file. The words split across many lines in the text extraction. The order above is the left-to-right order in the table."
+  },
+
+  "dollar_year": "2013 US dollars for data the authors converted; original-year US dollars for data taken from the World Travel and Tourism Council.",
+  "dollar_year_evidence": "Section A3.2 states, verbatim: 'Where possible, data was gathered for all years from 2008-2012. Local currency data was converted to historic US dollar values for 30 June of the relevant year. These values were then converted to 2013 values using the CPI price deflator. WTTC give their data as original values and 2013 equivalent, but we used original values as their conversion process was not clear and could not be applied to data from other sources.' Location: raw/sp_layout.txt, lines 337 to 341.",
+  "data_years": "Tourism statistics cover 2008 to 2012. Photo user days cover 2005 to 2012. Source: section A3.2 and section A3.3 of the supplement.",
+
+  "columns": [
+    {"name": "country", "unit": "text", "description": "Country or territory name. The CSV file keeps the exact source spelling, including World Bank style suffixes such as 'Bahamas, The', 'Egypt, Arab Rep.', 'Iran, Islamic Rep.', 'Micronesia, Fed. Sts.' and 'Venezuela, RB'."},
+    {"name": "international_and_domestic_tourist_arrivals", "unit": "arrivals per year (count of people)", "description": "International and domestic tourist arrivals. The source prints these rounded to the nearest thousand."},
+    {"name": "reef_associated_tourist_arrivals_trip_equivalents", "unit": "trip equivalents per year (count)", "description": "Sum of reef-associated tourist arrivals, expressed as trip equivalents."},
+    {"name": "all_visitor_spending_usd1000", "unit": "thousands of US dollars per year", "description": "All visitor spending, international and domestic. Multiply by 1000 to get US dollars."},
+    {"name": "reef_associated_visitor_expenditure_usd1000", "unit": "thousands of US dollars per year", "description": "Sum of reef-associated visitor expenditure. Multiply by 1000 to get US dollars. This is the reef tourism value column."},
+    {"name": "reef_visitor_expenditure_pct_of_total_tourism", "unit": "percent", "description": "Reef visitor expenditure as a proportion of total tourism. The source prints a percent sign on every value."},
+    {"name": "reef_tourism_pct_of_gdp", "unit": "percent", "description": "Reef tourism as a proportion of gross domestic product. The source prints a percent sign on every value."},
+    {"name": "mean_value_of_reef_usd_per_km2", "unit": "US dollars per square kilometre per year", "description": "Mean value of reef."}
+  ],
+
+  "empty_cells": {
+    "rule": "The source prints 'n/a'. The CSV file leaves the cell empty.",
+    "counts": {
+      "reef_visitor_expenditure_pct_of_total_tourism": 1,
+      "reef_tourism_pct_of_gdp": 19,
+      "mean_value_of_reef_usd_per_km2": 3
+    }
+  },
+
+  "extraction_method": {
+    "steps": [
+      "1. Download the supplementary PDF file with curl.",
+      "2. Run 'pdftotext -layout raw/spalding2017_mmc1.pdf raw/sp_layout.txt'. The layout mode keeps the eight columns apart. The plain mode breaks the table into one token per line and was not used for the values.",
+      "3. Select the text between the row 'Anguilla' and the row 'Virgin Islands (U.S.)'.",
+      "4. On each line, match the last seven fields with the regular expression '(?:\\$?\\d[\\d,]*(?:\\.\\d+)?%?|n/a)'. The text before the first match is the country name. A line with fewer than seven matches and no digit is a wrapped country name; the parser holds that text and joins it to the next line. This recovers 'St. Vincent and the Grenadines'.",
+      "5. Strip the dollar sign, the comma and the percent sign from each value. Map 'n/a' to an empty cell.",
+      "6. Write the CSV file with pandas."
+    ],
+    "tools": ["curl", "pdftotext 25.12.0 (poppler)", "Python 3.12 in the local venv", "pandas 3.0.6"],
+    "scripts": ["build_spalding.py", "mk_sp_verify.py"],
+    "manual_transcription": false,
+    "parser_defect_found_and_fixed": "The first version of the regular expression allowed a bare comma as a numeric token. That version cut 'Bahamas, The' down to 'Bahamas' and cut four other names. The fix requires at least one digit. The analyst confirmed all 80 names after the fix."
+  },
+
+  "total_check": {
+    "column": "reef_associated_visitor_expenditure_usd1000",
+    "csv_sum_usd1000": 35851038,
+    "csv_sum_billion_usd": 35.851,
+    "paper_states": "nearly US$36 billion",
+    "paper_states_verbatim": "Some 30% of the world's reefs are of value in the tourism sector, with a total value estimated at nearly US$36 billion, or over 9% of all coastal tourism value in the world's coral reef countries.",
+    "paper_states_source": "the article abstract, read from the OpenAlex record on 2026-09-19",
+    "difference_billion_usd": -0.149,
+    "result": "consistent"
+  },
+
+  "known_gaps": [
+    "Table A1 holds NO reef-area column. The nearest column is 'Mean value of reef (US$ km-2)'. The analyst did not add a derived reef area.",
+    "Table A1 covers 80 of the 117 jurisdictions in the study. The study reports tourism data for 102 countries and territories. The 22 jurisdictions with tourism data but below the two thresholds are NOT in Table A1, and the supplement prints no values for them.",
+    "The analyst could not read the article itself. ScienceDirect returned HTTP 403.",
+    "No machine-readable supplement exists. The analyst probed mmc1 to mmc4 in a prior session and found only mmc1, a PDF file."
+  ]
+}

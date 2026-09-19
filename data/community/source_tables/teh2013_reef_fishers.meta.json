@@ -1,0 +1,95 @@
+{
+  "dataset_name": "teh2013_reef_fishers",
+  "extracted_on": "2026-09-19",
+  "csv_file": "teh2013_reef_fishers.csv",
+  "row_count": 98,
+  "row_unit": "one row per country or territory",
+
+  "citation": "Teh, L.S.L., Teh, L.C.L. & Sumaila, U.R. (2013). A global estimate of the number of coral reef fishers. PLoS ONE 8(6), e65397.",
+  "doi": "10.1371/journal.pone.0065397",
+
+  "source_urls": [
+    {
+      "url": "https://journals.plos.org/plosone/article/file?type=supplementary&id=10.1371/journal.pone.0065397.s001",
+      "holds": "File S1, which holds Table S1, Table S2, Table S3 and Table S4",
+      "local_file": "raw/teh2013_S1.doc",
+      "bytes": 269312,
+      "sha256": "c618e16e5ceb8a01160bd181786f61d8899d88f879aef3a8c07b62cee67dd831",
+      "http_status": 200,
+      "format": "Microsoft Word 97 binary document (Composite Document File V2)"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0065397&type=manuscript",
+      "holds": "the article XML, used to read the license statement, Table 2 and Table 4",
+      "local_file": "raw/teh_article.xml",
+      "http_status": 200
+    }
+  ],
+
+  "license": "CC BY 4.0 (Creative Commons Attribution 4.0 International)",
+  "license_stated_where": [
+    "The article XML holds a <permissions> element that states, verbatim: '2013 Teh et al. This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.' Location: raw/teh_article.xml.",
+    "The Crossref record for DOI 10.1371/journal.pone.0065397 lists the license http://creativecommons.org/licenses/by/4.0/ with a start date of 2013-06-19."
+  ],
+
+  "table_extracted": {
+    "table": "Table S3, inside File S1",
+    "caption_verbatim": "Table S3. Estimated number of reef fishers for reef countries and territories worldwide in 2010. Estimates reported for countries marked '*' are from alternate sources.",
+    "column_headers_verbatim": ["Country", "Region", "No. of reef fishers", "Year and source of alternate estimate"],
+    "footnote_verbatim": "1 The north Asian countries of China, Japan, and Taiwan are catergorised under Southeast Asia as per the grouping by [5].",
+    "footnote_note": "The word 'catergorised' is a spelling error in the source. The analyst quotes it unchanged."
+  },
+
+  "reference_year": "2010. The table caption states 'worldwide in 2010'. Rows marked with a star use an alternate source from an earlier year; the CSV column alternate_estimate_year gives that year.",
+
+  "columns": [
+    {"name": "country", "unit": "text", "description": "Country or territory name, with the star and the footnote marker removed."},
+    {"name": "region", "unit": "text, one of five values", "description": "One of: Western Pacific, Eastern Pacific/Atlantic, Middle East/NE Africa, Indian Ocean, Southeast Asia. China, Japan and Taiwan sit in Southeast Asia by the authors' choice; see the footnote."},
+    {"name": "num_reef_fishers", "unit": "number of people (count of reef fishers)", "description": "Estimated number of reef fishers in 2010. Reef gleaners are included; the paper states that at least 25 percent of reef fishers are gleaners."},
+    {"name": "alternate_source_estimate", "unit": "0 or 1", "description": "1 when the source prints a star after the country name, which means the value comes from an alternate published source, not from the authors' own model. 11 rows carry a star: Antigua and Barbuda, Bahamas, Bahrain, Cuba, Dominican Republic, Fiji, Martinique, Puerto Rico, Seychelles, St. Kitts and Nevis, Timor-Leste."},
+    {"name": "alternate_estimate_year", "unit": "calendar year", "description": "The year of the alternate estimate, taken from the fourth column. Empty when the row carries no alternate source."},
+    {"name": "alternate_estimate_source", "unit": "text", "description": "Author and year of the alternate source, read from the EndNote field that the Word file embeds in the fourth column. Empty when the field holds a plain numeric reference such as '2005; [8]' instead of an EndNote record."},
+    {"name": "source_name_verbatim", "unit": "text", "description": "The country name exactly as the HTML conversion prints it, including the star and the footnote marker. Example: 'Bahamas*', 'China 1'."}
+  ],
+
+  "extraction_method": {
+    "steps": [
+      "1. Download File S1 with curl. The file is a Microsoft Word 97 binary document, not a PDF file.",
+      "2. Convert the file twice with the macOS command textutil: 'textutil -convert txt' and 'textutil -convert html'. The two conversions are independent readings.",
+      "3. Parse the HTML conversion. Table S3 is the third HTML table. Take the rows after the caption row and the header row, and stop before the 'Total' row.",
+      "4. In each row, strip a trailing star and a trailing footnote digit from the country name. Read the first number in the third cell. Two rows print the same number twice; the parser asserts that every number in a cell is equal and takes the first.",
+      "5. Read the year and the EndNote author from the fourth cell.",
+      "6. Cross-check the plain-text conversion with a second parser anchored on the five region names. Both parsers return 98 rows and the same sum of 6,122,041.",
+      "7. Write the CSV file with pandas."
+    ],
+    "tools": ["curl", "textutil (macOS)", "Python 3.12 in the local venv", "pandas 3.0.6"],
+    "scripts": ["build_teh.py", "parse_teh.py", "audit_teh.py", "mk_teh_verify.py"],
+    "manual_transcription": false,
+    "note_on_pdftotext": "The task suggested pdftotext. The source file is a Word document, not a PDF file, so pdftotext does not apply. The analyst used textutil instead."
+  },
+
+  "total_check": {
+    "column": "num_reef_fishers",
+    "csv_row_count": 98,
+    "csv_sum": 6122041,
+    "source_total_row": 6145200,
+    "difference": 23159,
+    "result": "NOT consistent. The CSV sum is short by 23,159 reef fishers, which is 0.38 percent of the printed total.",
+    "diagnosis": "The article states that the final calculation covers 99 countries. The published Table S3 prints only 98 country rows. Two independent parsers of the source file both return 98 rows, and every non-empty line in the table is used, so no row was lost in the conversion. The regional sums pin the gap to the Eastern Pacific/Atlantic region: Table 4 of the article gives 0.50 million for that region, and the CSV gives 0.48 million; adding 23,159 gives 503,704, which rounds to 0.50 million. The other four regional sums match Table 4 exactly. The analyst could not identify which country is missing. The analyst did NOT add a row and did NOT alter any value."
+  },
+
+  "regional_sums": {
+    "Southeast Asia": {"countries": 12, "fishers": 3348588, "article_table4_million": 3.35, "match": true},
+    "Indian Ocean": {"countries": 14, "fishers": 1502590, "article_table4_million": 1.50, "match": true},
+    "Eastern Pacific/Atlantic": {"countries": 35, "fishers": 480545, "article_table4_million": 0.50, "match": false},
+    "Western Pacific": {"countries": 23, "fishers": 445769, "article_table4_million": 0.45, "match": true},
+    "Middle East/NE Africa": {"countries": 14, "fishers": 344549, "article_table4_million": 0.34, "match": true}
+  },
+
+  "known_gaps": [
+    "Table S3 holds NO population column and NO reef-area column. The task asked for one. The source table has four columns only: Country, Region, No. of reef fishers, and Year and source of alternate estimate.",
+    "Table 2 of the article gives a rural coastal population LEVEL as the words Low, Medium or High, with no count. Table 3 of the article gives a fisher density per square kilometre of fishing ground by population level and fishing pressure level, with no per-country reef area. Neither table supplies a per-country population or reef area.",
+    "One country row, holding 23,159 reef fishers in the Eastern Pacific/Atlantic region, is absent from the published Table S3. The analyst could not name that country.",
+    "The article states that the study covered 100 reef countries and territories, and that the final calculation covers 99 countries after excluding Singapore. The CSV file holds 98 rows."
+  ]
+}

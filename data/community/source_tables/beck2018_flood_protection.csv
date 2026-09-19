@@ -1,0 +1,54 @@
+country,rank_annual_averted_damages,annual_averted_damages_musd,rank_annual_averted_damages_over_gdp,annual_averted_damages_over_gdp,rank_averted_built_capital_100yr,averted_built_capital_100yr_busd,rank_averted_built_capital_100yr_pct,averted_built_capital_100yr_pct_national,rank_avoided_area_flooded,annual_avoided_area_flooded_km2,rank_avoided_area_flooded_pct,annual_avoided_area_flooded_pct_country,rank_avoided_people_flooded,annual_avoided_people_flooded,rank_avoided_people_flooded_pct,annual_avoided_people_flooded_pct_country,source_name_variants
+Antigua and Barbuda,,,8,0.13,,,10,1.5,25,0.83,5,0.188,,,9,0.0512,Antigua & Barbuda
+Australia,,,,,,,,,26,0.7,,,,,,,Australia
+Bahamas,14,14,5,0.16,15,0.77,4,3.7,5,31.07,3,0.224,17,392,4,0.1015,Bahamas
+Belize,15,9,2,0.37,,,2,4.28,14,4.27,14,0.019,15,663,2,0.1973,Belize
+Bermuda,,,,,,,,,,,6,0.085,,,19,0.0099,Bermuda
+British Indian Ocean Territory,,,,,,,,,,,8,0.057,,,,,British Indian Ocean Territory
+Cambodia,,,,,,,,,,,,,28,86,,,Cambodia
+Cayman Islands,,,1,0.98,,,1,6.81,18,2.51,1,0.968,23,147,1,0.2402,Cayman Islands
+China,,,,,,,,,,,,,,,27,0.0044,China
+Cuba,5,401,4,0.25,4,19.04,6,2.61,3,79.51,7,0.072,5,8061,6,0.0705,Cuba
+Dominican Republic,7,96,9,0.11,9,4.43,8,2.19,7,18.41,10,0.038,7,6872,7,0.0645,Dom. Republic|Dom.Republic
+Egypt,,,,,,,,,24,0.87,,,26,99,,,Egypt
+Eritrea,,,,,,,,,29,0.51,,,,,,,Eritrea
+Fiji,,,,,,,,,28,0.63,28,0.003,,,,,Fiji
+Grenada,,,3,0.3,,,3,3.76,,,13,0.019,24,137,3,0.1318,Grenada
+Guadeloupe,,,13,0.05,,,,,,,15,0.017,29,71,14,0.0174,Guadeloupe
+Guam,,,,,,,,,,,20,0.007,,,,,Guam
+Haiti,,,,,,,,,,,,,12,1323,16,0.0125,Haiti
+Honduras,,,,,,,,,13,4.83,25,0.004,14,766,21,0.0093,Honduras
+India,,,,,,,,,27,0.67,,,21,214,,,India
+Indonesia,1,639,14,0.04,1,36.48,15,0.72,2,83.2,24,0.004,2,56034,12,0.022,Indonesia
+Iran,,,,,,,,,,,,,19,243,,,Iran
+Jamaica,10,46,6,0.14,11,2.43,5,2.67,16,2.56,18,0.013,11,1687,8,0.0615,Jamaica
+Kiribati,,,,,,,,,22,1.78,4,0.219,,,,,Kiribati
+Madagascar,,,,,,,,,20,1.92,,,20,222,,,Madagascar
+Malaysia,3,452,10,0.09,3,27.07,9,1.54,9,12.7,27,0.004,4,12340,10,0.0399,Malaysia
+Maldives,,,,,,,,,,,9,0.053,,,18,0.0111,Maldives
+Marshall Islands,,,,,,,,,,,19,0.01,,,,,Marshall Islands
+Martinique,,,,,,,,,,,17,0.014,,,20,0.0096,Martinique
+Mexico,4,452,,,5,18.87,,,4,38.02,,,3,15391,17,0.0123,Mexico
+Myanmar,12,33,,,14,1.04,,,6,26.21,26,0.004,6,7166,15,0.0133,Myanmar
+New Caledonia,,,,,,,13,0.83,,,,,,,,,New Caledonia
+Northern Mariana Islands,,,,,,,,,,,22,0.005,,,,,N. Mariana Is.
+Oman,,,,,,,,,21,1.87,,,,,,,Oman
+Papua New Guinea,,,,,,,,,12,5.82,,,18,344,26,0.0046,Papua New Guinea
+Philippines,2,590,7,0.13,2,31.14,7,2.37,1,88.45,11,0.03,1,73162,5,0.072,Philippines
+Pitcairn Islands,,,,,,,14,0.74,,,,,,,22,0.0092,Pitcairn Islands
+Saint Lucia,,,,,,,,,,,21,0.007,,,24,0.0065,Saint Lucia
+Saudi Arabia,6,138,,,7,7.29,,,8,16.89,,,10,1865,25,0.0062,Saudi Arabia
+Seychelles,,,11,0.06,,,11,1.14,,,23,0.005,,,,,Seychelles
+Solomon Islands,,,15,0.04,,,,,30,0.5,,,25,104,13,0.0177,Solomon Island|Solomon Islands
+Somalia,,,,,,,,,,,,,22,172,,,Somalia
+Sri Lanka,,,,,,,,,,,,,30,50,,,Sri Lanka
+Sudan,,,,,,,,,19,2.22,,,,,,,Sudan
+Taiwan,9,61,,,13,1.83,,,23,0.94,29,0.003,16,595,,,Taiwan
+Thailand,13,32,,,10,2.86,,,10,8.99,,,9,2077,30,0.003,Thailand
+Tonga,,,,,,,,,,,16,0.014,,,29,0.004,Tonga
+Turks and Caicos Islands,,,12,0.06,,,12,0.88,17,2.54,2,0.609,,,11,0.0249,Turks & Caicos|Turks and Caicos
+United Arab Emirates,,,,,6,7.84,,,,,,,,,,,United Arab Emirates
+United States,8,94,,,8,6.55,,,15,3.88,,,13,1102,,,United States
+United States Virgin Islands,,,,,,,,,,,12,0.028,,,28,0.0041,U.S. VI|U.S.V.I.
+Venezuela,,,,,,,,,,,,,27,93,,,Venezuela
+Vietnam,11,42,,,12,2.26,,,11,8.49,30,0.003,8,6319,23,0.0069,Vietnam

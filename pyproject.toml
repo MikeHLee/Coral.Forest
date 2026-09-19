@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "coralforest"
-version = "1.0.0"
-description = "A reproducible rebuild of a 2018 random-forest model of coral bleaching on Reef Check survey data, with stricter evaluation."
+version = "1.1.0"
+description = "A reproducible rebuild of a 2018 random-forest model of coral bleaching, and a global atlas of reef heat stress and what it exposes in the communities nearby."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "GPL-3.0" }
@@ -18,9 +18,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+atlas = ["ecoanalyst>=3.0", "matplotlib>=3.7"]
 
 [project.scripts]
 coralforest-evaluate = "coralforest.evaluate:main"
+coralforest-atlas = "coralforest.atlas.build:main"
 
 [tool.setuptools.packages.find]
 include = ["coralforest*"]

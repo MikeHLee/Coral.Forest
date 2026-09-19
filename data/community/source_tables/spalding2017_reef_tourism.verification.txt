@@ -1,0 +1,197 @@
+VERIFICATION - spalding2017_reef_tourism.csv
+==============================================================================
+
+Method of this check: the analyst read each quoted line from the plain-text
+extraction of the source PDF file. The analyst then compared each printed value
+with the literal text of the matching cell in the CSV file. Line numbers refer
+to raw/sp_layout.txt, which the analyst made with this command:
+    pdftotext -layout raw/spalding2017_mmc1.pdf raw/sp_layout.txt
+
+Column order in the source table and in the CSV file:
+  1 country
+  2 international_and_domestic_tourist_arrivals
+  3 reef_associated_tourist_arrivals_trip_equivalents
+  4 all_visitor_spending_usd1000
+  5 reef_associated_visitor_expenditure_usd1000
+  6 reef_visitor_expenditure_pct_of_total_tourism
+  7 reef_tourism_pct_of_gdp
+  8 mean_value_of_reef_usd_per_km2
+
+------------------------------------------------------------------------------
+CHECK 1 of 8 - row 1 of 80, first row
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 78):
+    Anguilla                          64,000               10,255                        $119,445             $19,685                  16.48%                   n/a             $376,746
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = Anguilla
+    international_and_domestic_tourist_arrivals          = 64000
+    reef_associated_tourist_arrivals_trip_equivalents    = 10255
+    all_visitor_spending_usd1000                         = 119445
+    reef_associated_visitor_expenditure_usd1000          = 19685
+    reef_visitor_expenditure_pct_of_total_tourism        = 16.48
+    reef_tourism_pct_of_gdp                              = (empty)
+    mean_value_of_reef_usd_per_km2                       = 376746
+
+------------------------------------------------------------------------------
+CHECK 2 of 8 - row 10 of 80
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 87):
+    Bonaire                           276,000              188,574                       $130,437             $90,200                  69.15%                   n/a                             n/a
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = Bonaire
+    international_and_domestic_tourist_arrivals          = 276000
+    reef_associated_tourist_arrivals_trip_equivalents    = 188574
+    all_visitor_spending_usd1000                         = 130437
+    reef_associated_visitor_expenditure_usd1000          = 90200
+    reef_visitor_expenditure_pct_of_total_tourism        = 69.15
+    reef_tourism_pct_of_gdp                              = (empty)
+    mean_value_of_reef_usd_per_km2                       = (empty)
+
+------------------------------------------------------------------------------
+CHECK 3 of 8 - row 24 of 80
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 150):
+    Egypt, Arab Rep.           20,370,000          4,724,101             $23,575,065                $5,467,295                     23.19%            1.98%             $1,735,236
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = Egypt, Arab Rep.
+    international_and_domestic_tourist_arrivals          = 20370000
+    reef_associated_tourist_arrivals_trip_equivalents    = 4724101
+    all_visitor_spending_usd1000                         = 23575065
+    reef_associated_visitor_expenditure_usd1000          = 5467295
+    reef_visitor_expenditure_pct_of_total_tourism        = 23.19
+    reef_tourism_pct_of_gdp                              = 1.98
+    mean_value_of_reef_usd_per_km2                       = 1735236
+
+------------------------------------------------------------------------------
+CHECK 4 of 8 - row 41 of 80
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 167):
+    Maldives                   807,000             430,202                  $1,823,053              $1,085,273                     59.53%          43.17%                    $205,505
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = Maldives
+    international_and_domestic_tourist_arrivals          = 807000
+    reef_associated_tourist_arrivals_trip_equivalents    = 430202
+    all_visitor_spending_usd1000                         = 1823053
+    reef_associated_visitor_expenditure_usd1000          = 1085273
+    reef_visitor_expenditure_pct_of_total_tourism        = 59.53
+    reef_tourism_pct_of_gdp                              = 43.17
+    mean_value_of_reef_usd_per_km2                       = 205505
+
+------------------------------------------------------------------------------
+CHECK 5 of 8 - row 50 of 80
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 176):
+    Northern Mariana Islands   368,000             121,271                                     $0         $61,302                        n/a                n/a             $337,752
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = Northern Mariana Islands
+    international_and_domestic_tourist_arrivals          = 368000
+    reef_associated_tourist_arrivals_trip_equivalents    = 121271
+    all_visitor_spending_usd1000                         = 0
+    reef_associated_visitor_expenditure_usd1000          = 61302
+    reef_visitor_expenditure_pct_of_total_tourism        = (empty)
+    reef_tourism_pct_of_gdp                              = (empty)
+    mean_value_of_reef_usd_per_km2                       = 337752
+
+------------------------------------------------------------------------------
+CHECK 6 of 8 - row 66 of 80, the country name wraps over two lines
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 241):
+    St. Vincent and the
+    Grenadines                  227,000             48,260                       $112,211             $24,639                  21.96%            3.56%                   $289,021   <- line 242, the continuation line
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = St. Vincent and the Grenadines
+    international_and_domestic_tourist_arrivals          = 227000
+    reef_associated_tourist_arrivals_trip_equivalents    = 48260
+    all_visitor_spending_usd1000                         = 112211
+    reef_associated_visitor_expenditure_usd1000          = 24639
+    reef_visitor_expenditure_pct_of_total_tourism        = 21.96
+    reef_tourism_pct_of_gdp                              = 3.56
+    mean_value_of_reef_usd_per_km2                       = 289021
+
+------------------------------------------------------------------------------
+CHECK 7 of 8 - row 75 of 80
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 251):
+    United States (Florida)     2,017,351,000       3,233,849            $856,234,703           $1,156,835                       0.14%           0.01%                  $976,644
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = United States (Florida)
+    international_and_domestic_tourist_arrivals          = 2017351000
+    reef_associated_tourist_arrivals_trip_equivalents    = 3233849
+    all_visitor_spending_usd1000                         = 856234703
+    reef_associated_visitor_expenditure_usd1000          = 1156835
+    reef_visitor_expenditure_pct_of_total_tourism        = 0.14
+    reef_tourism_pct_of_gdp                              = 0.01
+    mean_value_of_reef_usd_per_km2                       = 976644
+
+------------------------------------------------------------------------------
+CHECK 8 of 8 - row 80 of 80, last row
+
+RAW SOURCE TEXT (raw/sp_layout.txt line 256):
+    Virgin Islands (U.S.)       2,390,000           501,109                  $1,313,019            $276,056                    21.02%                   n/a        $2,056,283
+
+PARSED CELLS IN THE CSV FILE:
+    country                                              = Virgin Islands (U.S.)
+    international_and_domestic_tourist_arrivals          = 2390000
+    reef_associated_tourist_arrivals_trip_equivalents    = 501109
+    all_visitor_spending_usd1000                         = 1313019
+    reef_associated_visitor_expenditure_usd1000          = 276056
+    reef_visitor_expenditure_pct_of_total_tourism        = 21.02
+    reef_tourism_pct_of_gdp                              = (empty)
+    mean_value_of_reef_usd_per_km2                       = 2056283
+
+==============================================================================
+CHECK OF THE COLUMN SUMS AGAINST THE TOTAL THAT THE PAPER STATES
+==============================================================================
+
+TEST 1. Sum of reef-associated visitor expenditure.
+  Sum of the 80 values = 35851038 thousand US dollars
+  This equals 35.851 billion US dollars.
+  The paper abstract states, verbatim: 'Some 30% of the world's reefs are of
+  value in the tourism sector, with a total value estimated at nearly US$36
+  billion, or over 9% of all coastal tourism value in the world's coral reef
+  countries.'
+  Source of the abstract text: the OpenAlex record for DOI
+  10.1016/j.marpol.2017.05.014, read on 2026-09-19. The ScienceDirect article
+  page returned HTTP 403 and the analyst could not read the article PDF.
+  Difference: 35.851 billion minus 36 billion = -0.149 billion US dollars.
+  Result: consistent. The CSV sum is 35.851 billion, which the abstract describes
+  as 'nearly US$36 billion'. The remaining gap is the 22 jurisdictions that
+  Table A1 leaves out. Table A1 covers only the 80 places with more than 50 square kilometres
+  of reef and more than 10 million US dollars of reef-related spending. The
+  paper reports tourism data for 102 countries and territories in total
+  (raw/sp_layout.txt, section A3.1).
+
+TEST 2. Sum of all visitor spending.
+  Sum of the 80 values = 2300063394 thousand US dollars = 2300.1 billion US dollars.
+  Result: NOT verifiable. The paper prints no global total for this column.
+
+TEST 3. Row count.
+  The CSV file holds 80 rows.
+  The table caption states 'N=80'.
+  Result: consistent. The counts match exactly.
+
+==============================================================================
+VALUES THAT THE ANALYST COULD NOT VERIFY, AND MISSING COLUMNS
+==============================================================================
+
+1. Table A1 holds NO reef-area column. The task asked for a reef-area column.
+   The table gives 'Mean value of reef (US$ km-2)' instead. A reader can derive
+   an implied reef area by dividing column 5 by column 8, but the paper does
+   not print the reef area, so the analyst did not add a derived column.
+
+2. The table prints 'n/a' in some cells. The CSV file leaves those cells empty.
+   Counts of empty cells:
+     reef_visitor_expenditure_pct_of_total_tourism        1 empty cells
+     reef_tourism_pct_of_gdp                              19 empty cells
+     mean_value_of_reef_usd_per_km2                       3 empty cells
+
+3. The column reef_visitor_expenditure_pct_of_total_tourism is empty for
+   Northern Mariana Islands, because the source prints '$0' for all visitor
+   spending and 'n/a' for the proportion. The analyst kept the printed values.
