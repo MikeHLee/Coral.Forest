@@ -102,7 +102,9 @@ for (const r of REGIONS) {{
     `<strong>${{r.region}}</strong><br>${{r.surveys}} surveys, to ${{r.last_year}}` +
     `<br>Heat dose: ${{r.dhw_recent.toFixed(2)}} &rarr; ${{(r.dhw_recent + r.warming_c_weeks).toFixed(2)}} C-weeks` +
     `<br>Coral bleached: ${{pct(r.impairment_now)}} (${{pct(r.impairment_now_p05)}}-${{pct(r.impairment_now_p95)}})` +
-    `<br>At 2050 heat dose: <b>${{pct(r.impairment_2050)}}</b> (${{pct(r.impairment_2050_p05)}}-${{pct(r.impairment_2050_p95)}})`
+    `<br>At 2050 heat dose: <b>${{pct(r.impairment_2050)}}</b> (${{pct(r.impairment_2050_p05)}}-${{pct(r.impairment_2050_p95)}})` +
+    (r.coral_species == null ? '' : `<br>${{r.coral_species}} hard-coral species recorded`) +
+    (r.population_50km == null ? '' : `<br>${{Math.round(r.population_50km).toLocaleString()}} people within 50 km`)
   );
 }}
 const legend = L.control({{ position: 'bottomleft' }});
@@ -160,6 +162,7 @@ def write(path: Path, *, summary: Dict, regions: pd.DataFrame, countries: pd.Dat
     keep = ["region", "lat", "lon", "surveys", "last_year", "dhw_recent", "warming_c_weeks",
             "impairment_now", "impairment_now_p05", "impairment_now_p95",
             "impairment_2050", "impairment_2050_p05", "impairment_2050_p95"]
+    keep += [column for column in ("coral_species", "population_50km") if column in regions.columns]
     data = regions[keep].dropna(subset=["lat", "lon"]).round(4)
 
     scores = pd.DataFrame(summary["evaluation"])
@@ -193,13 +196,19 @@ def write(path: Path, *, summary: Dict, regions: pd.DataFrame, countries: pd.Dat
                                     values=["exposed_now", "exposed_2050"], aggfunc="sum")
         wide.columns = [f"{a}_{b}" for a, b in wide.columns]
         wide = wide.reset_index()
+        if "population_50km" in countries.columns:
+            wide = wide.merge(countries[["country", "population_50km"]], on="country", how="left")
         sort_key = "exposed_2050_shoreline" if "exposed_2050_shoreline" in wide else wide.columns[1]
         wide = wide.nlargest(15, sort_key)
         columns = {"country": "Country"}
         numeric = {}
+        if "population_50km" in wide.columns:
+            columns["population_50km"] = "People within 50 km of a surveyed reef"
+            numeric["population_50km"] = "{:,.0f}"
         for service, title in (("shoreline", "People behind the impaired share"),
                                ("tourism", "Reef tourism, USD a year"),
-                               ("fishery", "Reef fishers")):
+                               ("fishery", "Reef fishers"),
+                               ("habitat", "Coral species behind it")):
             column = f"exposed_2050_{service}"
             if column in wide:
                 columns[column] = title
@@ -210,7 +219,9 @@ def write(path: Path, *, summary: Dict, regions: pd.DataFrame, countries: pd.Dat
             "whose loss rate is the share of coral bleached, so the number below is the part of the benefit "
             "that sits behind impaired reef at the 2050 heat dose. Read it as exposure, not as damage: it does "
             "not say that this value is lost, and it treats every unit of the benefit as coral-dependent, which "
-            "is an upper bound.</p>" + _table(wide[list(columns)], columns, numeric))
+            "is an upper bound. The species column is a count for that country alone: species counts "
+            "cannot be added across countries, because a species that lives in several of them would be "
+            "counted once for each.</p>" + _table(wide[list(columns)], columns, numeric))
     else:
         community = ("<p>The community tables are not present in this build, so the page shows reef risk only. "
                      "Add them under <code>data/community/</code> and run the build again.</p>")

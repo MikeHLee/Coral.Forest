@@ -18,6 +18,17 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: pytest -q
 
+  atlas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # EcoAnalyst 3.0 is not on PyPI yet; switch this to `.[dev,atlas]` once it is.
+      - run: pip install -e ".[dev]" matplotlib "ecoanalyst @ git+https://github.com/MikeHLee/EcoAnalyst@main"
+      - run: pytest -q tests/test_atlas.py
+
   r-reproduction:
     runs-on: ubuntu-latest
     steps:

@@ -140,7 +140,7 @@ def leave_one_region_out(table: pd.DataFrame, outcome: str = "impairment") -> Sc
         predicted[held] = predict(fit(train), table[held], outcome)
     ok = np.isfinite(predicted)
     return _score("leave-one-region-out", table.loc[ok, outcome].to_numpy(), predicted[ok],
-                  float(table.loc[~ok.any() if False else slice(None), outcome].mean()))
+                  float(table.loc[ok, outcome].mean()))
 
 
 def later_years(table: pd.DataFrame, split_year: int = 2010, outcome: str = "impairment") -> Scores:

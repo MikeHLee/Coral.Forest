@@ -87,6 +87,24 @@ def region_risk(model, regions: pd.DataFrame, n: int, seed: int) -> pd.DataFrame
     return out
 
 
+def region_extras(regions: pd.DataFrame) -> pd.DataFrame:
+    """Add the harvested per-region layers when they are in the cache."""
+    out = regions
+    for filename, columns in (("species_by_region.csv", {"habitat": "coral_species"}),
+                              ("population_by_region.csv", {"population_50km": "population_50km",
+                                                            "population": "population_50km"})):
+        path = sources.CACHE / filename
+        if not path.exists():
+            continue
+        frame = pd.read_csv(path).rename(columns={"ecoregion": "region"})
+        keep = {source: target for source, target in columns.items() if source in frame.columns}
+        if not keep:
+            continue
+        frame = frame[["region", *keep]].rename(columns=keep)
+        out = out.merge(frame, on="region", how="left")
+    return out
+
+
 def country_risk(surveys: pd.DataFrame, regions: pd.DataFrame) -> pd.DataFrame:
     """Region values rolled up to countries, weighted by surveys."""
     weights = (surveys.groupby(["country", "ecoregion"]).size().rename("surveys").reset_index()
@@ -138,7 +156,7 @@ def main() -> None:
     scale = calibration(table, surveys, annual)
     steps = warming_steps(surveys, trends, scale["slope"])
     regions = risk.scenario_frame(table, steps)
-    regions = region_risk(model, regions, n=args.n, seed=args.seed)
+    regions = region_extras(region_risk(model, regions, n=args.n, seed=args.seed))
 
     countries = country_risk(surveys, regions)
     benefits = services.load_benefits()
@@ -202,6 +220,15 @@ def main() -> None:
           f"2050 {summary['impairment_2050_median']:.1%}")
     if not exposure.empty:
         for service, group in exposure.groupby("service"):
+            if service == "habitat":
+                # Species counts do not add up across countries: a species that
+                # lives in several of them would be counted once per country.
+                top = group.nlargest(1, "exposed_2050").iloc[0]
+                print(f"  {service:10s} per country, most exposed {top['country']}: "
+                      f"{top['exposed_now']:,.0f} -> {top['exposed_2050']:,.0f} of "
+                      f"{top['benefit']:,.0f} {group['unit'].iloc[0]}"
+                      f" ({group['country'].nunique()} countries)")
+                continue
             print(f"  {service:10s} exposed now {group['exposed_now'].sum():,.0f} -> "
                   f"2050 {group['exposed_2050'].sum():,.0f} {group['unit'].iloc[0]}"
                   f" ({group['country'].nunique()} countries)")

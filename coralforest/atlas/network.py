@@ -21,6 +21,14 @@ converted and is never at risk. The default is 1.0, which treats every unit as
 coral-dependent and is the largest number the data can support. Read it as an
 upper bound.
 
+With one lossy component the arithmetic is plain: the exposure equals the
+benefit times the coral-dependent share times the share of coral bleached, and
+a test checks exactly that. The network is here because it keeps those
+assumptions in one place, in a form that holds more than one of them: a service
+that loses part of its own value, a second lossy step between reef and
+household, or several routes to the same community all belong on this graph
+without changing how the result is read.
+
 Read the results as exposure, not as damage. "38,000 reef fishers exposed"
 means the model puts 38,000 fishers behind the share of reef function that
 bleaching impairs in that year. It does not say that those people lose their

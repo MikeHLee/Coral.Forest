@@ -87,10 +87,16 @@ every region's numbers, the fitted equation, and the sources.
    +1.48 degree heating weeks per
    decade at the median station. That trend, carried to 2050, is the warming
    step in the scenario.
-4. **Sends the benefits through the reef.** Each country's reef fishers, reef
-   tourism value, and people shielded from flooding enter a small flow network
-   whose reef node loses the share of coral that bleaches. What the reef loses
-   is the benefit exposed to bleaching.
+4. **Counts who lives there, and what else does.** People within 50 km of a
+   surveyed reef come from the JRC population grid, each grid cell counted once
+   however many sites it sits near (382 million worldwide).
+   Hard-coral species come from OBIS, one species list per region and the union
+   per country, counting only datasets whose licence allows reuse
+   (642 species in the richest country).
+5. **Sends the benefits through the reef.** Each country's reef fishers, reef
+   tourism value, people shielded from flooding, and coral species enter a small
+   flow network whose reef node loses the share of coral that bleaches. What the
+   reef loses is the benefit exposed to bleaching.
 
 ### What it finds
 
@@ -107,12 +113,17 @@ The last row is the control: knowing which region a reef is in explains a good
 part of how much it bleaches, and knowing how hot that year was adds the rest.
 
 At the 2050 heat dose, and treating every unit of benefit as coral-dependent,
-the flow model puts **671,000 reef fishers** (71 countries, from 391,000
-today), **4.47 billion US dollars a year of reef tourism** (62 countries, from
-2.09 billion), and **24,000 people** whose flood exposure reefs lower (27
-countries, from 13,000) behind impaired reef. Read those as exposure, not as
-damage: the model says what sits behind the impaired share of a reef, not what
-is lost, and it has no view on how fast a reef recovers.
+the flow model puts **671,000 reef fishers** (71 countries, from 391,000 today),
+**4.47 billion US dollars a year of reef tourism** (62 countries, from 2.09
+billion), and **24,000 people** whose flood exposure reefs lower (27 countries,
+from 13,000) behind impaired reef. Species are counted per country, because a
+species that lives in several of them cannot be added across them: for the
+United States, the country with the most species exposed, 82 of its 483
+recorded coral species sit behind impaired reef, against 38 today.
+
+Read those as exposure, not as damage: the model says what sits behind the
+impaired share of a reef, not what is lost, and it has no view on how fast a
+reef recovers.
 
 ### Run it
 
@@ -124,6 +135,17 @@ is lost, and it has no view on how fast a reef recovers.
 The first run downloads about 40 MB into `data/external/` (git-ignored) and
 takes a few minutes; later runs read the cache. Outputs go to `results/atlas/`
 (tables and a JSON summary), `figures/`, and `docs/atlas.html`.
+
+The two community layers that need many requests are harvested separately and
+committed, so an ordinary build never touches OBIS or the population grid:
+
+```bash
+.venv/bin/pip install -e ".[atlas,population]"
+.venv/bin/python -m coralforest.atlas.harvest --species --population
+```
+
+That run fetches about 100 MB of population tiles once and takes roughly half
+an hour.
 
 ### Limits
 
@@ -142,6 +164,13 @@ takes a few minutes; later runs read the cache. Outputs go to `results/atlas/`
   gaps are recorded in [`data/community/README.md`](data/community/README.md).
 - Bleaching is not death. The model measures the share of coral recorded as
   bleached, which is a measure of stress in that year.
+- A species count is "recorded in this region", not "living on this reef".
+  Recording effort drives it: a well-studied coast holds more species for that
+  reason alone, and OBIS datasets whose licence forbids reuse are left out
+  entirely.
+- The population grid under-counts small islands, which is exactly where many
+  reef communities are: it puts about 4 people within 10 km of Heron Island,
+  which has about 100.
 
 ## License
 

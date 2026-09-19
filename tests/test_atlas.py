@@ -164,3 +164,104 @@ def test_benefit_gaps_are_reported(tmp_path: Path):
     gaps = services.unmatched(pd.DataFrame({"country": ["Fiji", "Belize"]}), benefits)
     assert gaps["surveys_without_benefits"] == ["belize"]
     assert gaps["benefits_without_surveys"] == ["tonga"]
+
+
+# -- the two harvested layers -------------------------------------------------
+
+def test_obis_licence_filter_keeps_only_open_datasets():
+    from coralforest.atlas import obis
+
+    assert obis.is_open("This work is licensed under a Creative Commons Attribution (CC-BY) 4.0 License")
+    assert obis.is_open("CC0 1.0 Universal Public Domain Dedication")
+    assert not obis.is_open("Creative Commons Attribution Non Commercial (CC-BY-NC) 4.0 License")
+    assert not obis.is_open("CC BY-ND 4.0")
+    assert not obis.is_open(None)
+    assert not obis.is_open("All rights reserved")
+
+
+def test_obis_box_is_a_padded_closed_rectangle():
+    from coralforest.atlas import obis
+
+    wkt = obis.box(-23.5, -23.4, 151.9, 152.0, pad=0.1)
+    assert wkt.startswith("POLYGON((") and wkt.endswith("))")
+    points = [tuple(float(v) for v in pair.split()) for pair in wkt[9:-2].split(",")]
+    assert len(points) == 5 and points[0] == points[-1]
+    lons = [p[0] for p in points]
+    lats = [p[1] for p in points]
+    assert min(lons) == pytest.approx(151.8) and max(lons) == pytest.approx(152.1)
+    assert min(lats) == pytest.approx(-23.6) and max(lats) == pytest.approx(-23.3)
+
+
+def test_population_grid_arithmetic():
+    population = pytest.importorskip("coralforest.atlas.population",
+                                     reason="the population layer needs rasterio")
+    # The published global raster overhangs a full turn of longitude by two cells.
+    assert population.GLOBAL_COLS == 43202
+    assert population.wrap_col(37) == 1 and population.wrap_col(0) == 36
+    assert population.lon_shift_for(37) == pytest.approx(360.0)
+    assert population.lon_shift_for(36) == pytest.approx(0.0)
+    assert population.tile_row_index(89.0) == 1
+    assert population.tile_col_continuous(-180.0) == 1
+
+
+def test_population_distance_and_search_box():
+    population = pytest.importorskip("coralforest.atlas.population",
+                                     reason="the population layer needs rasterio")
+    # One degree of latitude is about 111.2 km.
+    km = population.haversine_km(0.0, 0.0, np.array([1.0]), np.array([0.0]))
+    assert km[0] == pytest.approx(111.19, abs=0.05)
+    # The same separation in longitude shrinks with the cosine of the latitude.
+    near_pole = population.haversine_km(60.0, 0.0, np.array([60.0]), np.array([1.0]))
+    assert near_pole[0] == pytest.approx(111.19 * 0.5, abs=0.2)
+    lat_min, lat_max, lon_min, lon_max, full = population.search_box(0.0, 179.9, 50.0)
+    assert not full and lon_max > 180.0  # the box runs past the date line rather than wrapping
+    assert lat_max - lat_min == pytest.approx(2 * 50.0 / 111.19, abs=0.02)
+
+
+def test_species_list_uses_open_datasets_only(monkeypatch):
+    from coralforest.atlas import obis
+
+    calls = {}
+
+    def fake_get(path, params):
+        calls[path] = params
+        if path == "dataset":
+            return {"results": [
+                {"id": "open-1", "intellectualrights": "Creative Commons Attribution (CC-BY) 4.0"},
+                {"id": "open-2", "intellectualrights": "CC0 1.0"},
+                {"id": "closed", "intellectualrights": "CC BY-NC 4.0"},
+            ]}
+        return {"results": [
+            {"taxonID": 1, "taxonRank": "Species", "records": 10},
+            {"taxonID": 2, "taxonRank": "Species", "records": 5},
+            {"taxonID": 3, "taxonRank": "Genus", "records": 99},
+        ]}
+
+    monkeypatch.setattr(obis, "_get", fake_get)
+    result = obis.species_list("POLYGON((0 0,1 0,1 1,0 1,0 0))")
+    assert result["species"] == {1, 2}      # the genus row is not a species
+    assert result["records"] == 15
+    assert result["datasets_used"] == 2 and result["datasets_dropped"] == 1
+    assert calls["checklist"]["datasetid"] == "open-1,open-2"
+
+
+def test_boxes_skip_a_group_that_straddles_the_date_line():
+    from coralforest.atlas import obis
+
+    frame = pd.DataFrame({"region": ["compact", "compact", "split", "split"],
+                          "lat": [-18.0, -17.5, 10.0, 10.5],
+                          "lon": [147.0, 147.5, -179.0, 179.0]})
+    names = [name for name, _ in obis.boxes_from_points(frame, "region")]
+    assert names == ["compact"]
+
+
+def test_exposure_equals_benefit_times_the_bleached_share():
+    """The flow model's arithmetic, stated: benefit x dependence x impairment."""
+    model = risk.fit(synthetic_region_years(slope=0.6))
+    benefit = 1_000_000.0
+    one = network.CountryCase("Check", {"tourism": benefit}, dhw_dev_now=0.0,
+                              dhw_dev_2050=2.0, dhw_region=1.0)
+    exposed = network.assess(one, model, n=2000, seed=3).iloc[0]
+    expected = risk.expected(model, [0.0, 2.0], [1.0, 1.0], n=2000, seed=3)
+    assert exposed["exposed_now"] == pytest.approx(benefit * expected["mean"][0], rel=1e-9)
+    assert exposed["exposed_2050"] == pytest.approx(benefit * expected["mean"][1], rel=1e-9)

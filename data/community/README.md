@@ -10,8 +10,29 @@ row checks kept beside them in `source_tables/`.
 | `reef_tourism.csv` | `tourism` | US dollars a year, 2013 dollars | 80 | Spalding et al. 2017, Table A1 |
 | `reef_flood_protection.csv` | `shoreline` | people whose annual flood exposure reefs lower | 30 | Beck et al. 2018, Table 1 |
 | `reef_flood_protection.csv` | `annual_averted_damages_musd` | millions of 2011 US dollars a year | 15 | Beck et al. 2018, Table 1 |
+| `reef_species.csv` | `habitat` | hard-coral species recorded near the country's survey sites | harvested | OBIS |
+| `population_near_reefs.csv` | `population_50km` | people living within 50 km of a survey site | harvested | JRC GHS-POP R2023A |
 
-Every source is open access under CC BY 4.0. `source_tables/*.meta.json` names
+The last two are harvested rather than transcribed:
+`python -m coralforest.atlas.harvest --species --population` rebuilds them.
+
+- **Species** come from OBIS, which pools datasets under different licences.
+  The harvest counts species only from datasets whose stated rights allow
+  reuse with attribution, and every row records how many datasets it used and
+  how many it left out. A count is "hard-coral species recorded in this box",
+  not "species that live on this reef": recording effort is uneven, so a
+  well-studied coast holds more species for that reason alone.
+- **Population** comes from the JRC global population grid at 30 arcsec,
+  epoch 2020, CC BY 4.0 (Schiavina, Freire, Carioli and MacManus 2023,
+  doi:10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE). A cell counts once even
+  when the 50 km circles of several survey sites overlap it. Two limits of the
+  grid matter here: it under-counts small islands (about 4 people within 10 km
+  of Heron Island, which has about 100), and its raster overhangs a full turn
+  of longitude by two cells, so a site at the date line can count a narrow
+  strip twice.
+
+The three transcribed papers are open access under CC BY 4.0, and the
+population grid is CC BY 4.0. `source_tables/*.meta.json` names
 the place each licence is stated, the exact table and caption, the units of
 every column, and the download URL. `source_tables/*.verification.txt` quotes
 the source text next to eight parsed values per table.
